@@ -1,0 +1,8 @@
+{
+  "total_patients": 157,
+  "busiest_hour": "2024-01-01 11:00:00",
+  "busiest_hour_count": 7,
+  "busiest_day": "2024-01-02",
+  "busiest_day_count": 54,
+  "average_daily": 39.25
+}
