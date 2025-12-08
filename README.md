@@ -5,7 +5,7 @@ Outil simple (sans IA) pour analyser les arrivées de patients.
 ## Usage
 ```bash
 python -m src.main analyze --csv data/sample_data.csv --out data/output
-or
+or with gui
 python -m src.gui
 ```
 
