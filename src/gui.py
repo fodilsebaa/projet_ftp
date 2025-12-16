@@ -2,7 +2,7 @@
 src/gui.py
 Interface graphique avancée (Menu, Sidebar, Pages, Guide)
 Usage:
-    python -m src.gui
+    python -m src.gui       eeee
 """
 
 import tkinter as tk
