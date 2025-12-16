@@ -11,6 +11,7 @@ from pathlib import Path
 import threading
 import io
 import os
+from src.database import init_db, insert_analysis
 
 # Try to import matplotlib canvas for embedding plots
 try:
@@ -413,6 +414,16 @@ Conseils :
 
             # switch to results page
             self.show_page("results")
+            # Initialiser la base (crée si n'existe pas)
+            init_db()
+
+            # Enregistrer l'analyse
+            insert_analysis(
+                file_name=csv.name,
+                total_patients=total,
+                busiest_hour=str(bh),
+                busiest_day=str(bd)
+            )
         except Exception as e:
             self.status_var.set("Erreur")
             messagebox.showerror("Erreur pendant l'analyse", str(e))
