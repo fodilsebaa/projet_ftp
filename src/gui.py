@@ -13,7 +13,6 @@ import io
 import os
 from src.database import init_db, insert_analysis
 
-# Try to import matplotlib canvas for embedding plots
 try:
     import matplotlib
     matplotlib.use("TkAgg")
@@ -22,15 +21,13 @@ try:
 except Exception:
     HAS_MATPLOTLIB_TK = False
 
-# Import project modules (assumes they exist in src/)
 from src.data_loader import DataLoader
 from src.analyzer import ArrivalAnalyzer
 from src.plotter import plot_hourly, plot_daily
 from src.report import generate_summary
 
-# ---------------------------
+
 # Styling constants
-# ---------------------------
 BG = "#1f2326"
 PANEL_BG = "#16171a"
 ACCENT = "#4A90E2"
@@ -38,40 +35,14 @@ TEXT = "#E6E6E6"
 SUB_TEXT = "#A9B0B6"
 BTN_BG = "#2E86FF"
 BTN_FG = "#FFFFFF"
-
 FONT_TITLE = ("Segoe UI", 16, "bold")
 FONT_SUB = ("Segoe UI", 11)
 FONT_NORMAL = ("Segoe UI", 10)
 
-# ---------------------------
-# Helper UI components
-# ---------------------------
-
-class IconButton(ttk.Frame):
-    def __init__(self, parent, text, command=None, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
-        self.config(padding=(4, 2))
-        self.btn = tk.Button(self, text=text, command=command,
-                             font=FONT_SUB, bg=BTN_BG, fg=BTN_FG, bd=0, relief="flat",
-                             activebackground="#5ea1ff", cursor="hand2")
-        self.btn.pack(fill="x", expand=True)
-
-class LabeledEntry(ttk.Frame):
-    def __init__(self, parent, label, initial="", width=50, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
-        self.label = ttk.Label(self, text=label, foreground=TEXT, background=BG, font=FONT_NORMAL)
-        self.entry = tk.Entry(self, font=FONT_NORMAL, bg="#2b2f33", fg=TEXT, insertbackground=TEXT, width=width, bd=1, relief="solid")
-        self.label.pack(anchor="w", padx=2, pady=(2,0))
-        self.entry.pack(fill="x", padx=2, pady=(0,4))
-
-# ---------------------------
-# Main Application
-# ---------------------------
-
 class PatientArrivalApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Patient Arrival Counter - Advanced UI")
+        self.title("Patient Arrival Counter")
         self.geometry("980x640")
         self.minsize(900, 600)
         self.configure(bg=BG)
@@ -84,15 +55,13 @@ class PatientArrivalApp(tk.Tk):
         self.daily_df = None
         self.summary = None
 
-        # build UI
-        self._build_menu()
-        self._build_header()
-        self._build_body()
+        # menu,header and body building
+        self.build_menu()
+        self.build_header()
+        self.build_body()
 
-    # ---------------------------
     # Menubar
-    # ---------------------------
-    def _build_menu(self):
+    def build_menu(self):
         menubar = tk.Menu(self)
 
         file_menu = tk.Menu(menubar, tearoff=0)
@@ -115,21 +84,17 @@ class PatientArrivalApp(tk.Tk):
 
         self.config(menu=menubar)
 
-    # ---------------------------
     # Header
-    # ---------------------------
-    def _build_header(self):
+    def build_header(self):
         header = tk.Frame(self, bg=BG, height=70)
         header.pack(side="top", fill="x")
         title = tk.Label(header, text="Patient Arrival Counter", font=FONT_TITLE, fg=ACCENT, bg=BG)
-        subtitle = tk.Label(header, text="Analyse simple des arrivées — sans IA", font=FONT_NORMAL, fg=SUB_TEXT, bg=BG)
+        subtitle = tk.Label(header, text="Analyse simple des arrivées", font=FONT_NORMAL, fg=SUB_TEXT, bg=BG)
         title.pack(anchor="w", padx=20, pady=(8,0))
         subtitle.pack(anchor="w", padx=20)
 
-    # ---------------------------
     # Body (sidebar + content)
-    # ---------------------------
-    def _build_body(self):
+    def build_body(self):
         body = tk.Frame(self, bg=BG)
         body.pack(side="top", fill="both", expand=True)
 
@@ -163,12 +128,12 @@ class PatientArrivalApp(tk.Tk):
             frame.place(relx=0, rely=0, relwidth=1, relheight=1)
             self.pages[page_name] = frame
 
-        self._build_home(self.pages["home"])
-        self._build_analyze(self.pages["analyze"])
-        self._build_plots(self.pages["plots"])
-        self._build_results(self.pages["results"])
-        self._build_guide(self.pages["guide"])
-        self._build_about(self.pages["about"])
+        self.build_home(self.pages["home"])
+        self.build_analyze(self.pages["analyze"])
+        self.build_plots(self.pages["plots"])
+        self.build_results(self.pages["results"])
+        self.build_guide(self.pages["guide"])
+        self.build_about(self.pages["about"])
 
         # start on home
         self.show_page("home")
@@ -176,7 +141,7 @@ class PatientArrivalApp(tk.Tk):
     # ---------------------------
     # Page builders
     # ---------------------------
-    def _build_home(self, frame):
+    def build_home(self, frame):
         tk.Label(frame, text="Bienvenue", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw")
         text = (
             "Ce logiciel vous permet d'analyser rapidement un fichier CSV contenant\n"
@@ -184,12 +149,13 @@ class PatientArrivalApp(tk.Tk):
             "Fonctions disponibles :\n"
             "- Charger un CSV\n"
             "- Lancer l'analyse (compte horaire et journalier)\n"
+            "- Storer chaque analyse dans une base de donnée sqlite\n"
             "- Générer des graphiques et un résumé JSON\n\n"
             "Utilisez le menu Fichier ou allez dans 'Analyser un CSV' pour démarrer."
         )
         tk.Label(frame, text=text, font=("Segoe UI", 10), bg=BG, fg=SUB_TEXT, justify="left").pack(anchor="nw", pady=10, padx=6)
 
-    def _build_analyze(self, frame):
+    def build_analyze(self, frame):
         tk.Label(frame, text="Analyser un CSV", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw")
         container = tk.Frame(frame, bg=BG)
         container.pack(fill="both", expand=True, pady=8)
@@ -234,7 +200,7 @@ class PatientArrivalApp(tk.Tk):
         status_lbl = tk.Label(frame, textvariable=self.status_var, bg=BG, fg=SUB_TEXT, anchor="w")
         status_lbl.pack(fill="x", padx=6, pady=6)
 
-    def _build_plots(self, frame):
+    def build_plots(self, frame):
         tk.Label(frame, text="Graphiques", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw")
 
         # Canvas area for plot
@@ -247,67 +213,56 @@ class PatientArrivalApp(tk.Tk):
         tk.Button(btns, text="Montrer patients par heure", command=lambda: self.show_plot("hourly"), bg=BTN_BG, fg=BTN_FG, bd=0, cursor="hand2").pack(side="left", padx=6)
         tk.Button(btns, text="Montrer patients par jour", command=lambda: self.show_plot("daily"), bg=BTN_BG, fg=BTN_FG, bd=0, cursor="hand2").pack(side="left", padx=6)
 
-    def _build_results(self, frame):
+    def build_results(self, frame):
         tk.Label(frame, text="Résultats", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw", padx=6, pady=(6,2))
         self.results_text = tk.Text(frame, height=12, bg="#121314", fg=TEXT, insertbackground=TEXT, font=FONT_NORMAL)
         self.results_text.pack(fill="both", expand=True, padx=6, pady=6)
 
-    def _build_guide(self, frame):
+    def build_guide(self, frame):
         tk.Label(frame, text="Guide d'utilisation", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw", padx=6)
         guide_text = """
-Mode d'emploi rapide :
+            Mode d'emploi rapide :
 
-1) Préparez un fichier CSV contenant au minimum deux colonnes :
-   - timestamp : au format 'YYYY-MM-DD HH:MM:SS' (ou autre format lisible par pandas)
-   - patient_id : identifiant unique du patient (ou identifiant par visite)
+            1) Préparez un fichier CSV contenant au minimum deux colonnes :
+            - timestamp : au format 'YYYY-MM-DD HH:MM:SS' (ou autre format lisible par pandas)
+            - patient_id : identifiant unique du patient (ou identifiant par visite)
 
-2) Allez dans 'Analyser un CSV' -> Parcourir -> sélectionnez le CSV.
-   (Optionnel) Choisissez un dossier de sortie (sinon 'data/output').
+            2) Allez dans 'Analyser un CSV' -> Parcourir -> sélectionnez le CSV.
+            (Optionnel) Choisissez un dossier de sortie (sinon 'data/output').
 
-3) Cliquez sur 'Lancer l'analyse'.
-   Le logiciel génère :
-     - hourly_counts.csv
-     - daily_counts.csv
-     - hourly.png
-     - daily.png
-     - summary.json
-
-4) Visualisez les graphiques dans 'Graphiques' et les résultats dans 'Résultats'.
-
-Conseils :
-- Si vos timestamps ont un autre format, pandas détecte souvent automatiquement.
-- Pour de larges fichiers, l'analyse peut prendre quelques secondes.
-"""
+            3) Cliquez sur 'Lancer l'analyse'.
+            Le logiciel génère :
+                - hourly_counts.csv
+                - daily_counts.csv
+                - hourly.png
+                - daily.png
+                - summary.json
+            
+            4) Visualisez les graphiques dans 'Graphiques' et les résultats dans 'Résultats'.
+            5) Storer les analyses dans une base données sqlite qui ce trouve dans le dossier de output
+            """
         txt = tk.Text(frame, wrap="word", bg="#121314", fg=TEXT, insertbackground=TEXT, font=("Segoe UI", 10))
         txt.insert("1.0", guide_text.strip())
         txt.configure(state="disabled")
         txt.pack(fill="both", expand=True, padx=6, pady=6)
 
-    def _build_about(self, frame):
+    def build_about(self, frame):
         tk.Label(frame, text="À propos", font=("Segoe UI", 14, "bold"), bg=BG, fg=TEXT).pack(anchor="nw", padx=6)
         about = (
             "PatientArrivalCounter\n"
             "Version : 1.0\n"
-            "Auteur : Toi\n\n"
+            "Auteur : Sebaa Fodil,Doctorant SIAD\n\n"
             "Outil simple pour analyser les arrivées de patients aux urgences.\n"
-            "Aucune intelligence artificielle n'est utilisée — uniquement agrégation et visualisation."
         )
         tk.Label(frame, text=about, font=FONT_NORMAL, bg=BG, fg=SUB_TEXT, justify="left").pack(anchor="nw", padx=6, pady=10)
 
-    # ---------------------------
     # Page switching
-    # ---------------------------
     def show_page(self, page_name):
         for name, frame in self.pages.items():
             if name == page_name:
                 frame.lift()
             else:
                 frame.lower()
-
-    # ---------------------------
-    # Actions and logic
-    # ---------------------------
-
     def action_open_csv(self):
         p = filedialog.askopenfilename(filetypes=[("CSV files","*.csv"), ("All files","*.*")])
         if p:
