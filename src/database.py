@@ -5,6 +5,7 @@ from datetime import datetime
 DB_PATH = Path("data/analysis_history.db")
 
 def init_db():
+    print(">>> init_db called")
     """Create database and table if they don't exist"""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
