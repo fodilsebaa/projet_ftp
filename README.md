@@ -1,10 +1,11 @@
 # PatientArrivalCounter
 Outil pour analyser les arrivées de patients.
 
+# Fonctionalité
+Ce projet est dévelopé a l'aide de tkinter ,permet d'analyser des fichiers csv contenant des les arrivée des patients
+et engendre des résultas ce forme graphiue,csv,JSON ,et garde l'historiue des analyses dans une bdd slite.
 ## Usage
 ```bash
-python -m src.main analyze --csv data/sample_data.csv --out data/output
-or with gui
 python -m src.gui
 ```
 
@@ -13,3 +14,6 @@ Résultats générés dans `data/output/` :
 - daily_counts.csv
 - hourly.png, daily.png
 - summary.json
+
+# Author
+Sebaa Fodil , Doctorant SIAD.
