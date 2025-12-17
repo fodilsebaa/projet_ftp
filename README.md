@@ -1,6 +1,5 @@
 # PatientArrivalCounter
-
-Outil simple (sans IA) pour analyser les arrivées de patients.
+Outil pour analyser les arrivées de patients.
 
 ## Usage
 ```bash

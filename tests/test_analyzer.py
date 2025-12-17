@@ -1,3 +1,8 @@
+import sys
+import os
+
+# Ajouter le dossier parent (projet) au PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.analyzer import ArrivalAnalyzer
 import pandas as pd
 

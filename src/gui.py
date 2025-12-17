@@ -1,10 +1,3 @@
-"""
-src/gui.py
-Interface graphique avancée (Menu, Sidebar, Pages, Guide)
-Usage:
-    python -m src.gui       eeee
-"""
-
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
@@ -12,20 +5,14 @@ import threading
 import io
 import os
 from src.database import init_db, insert_analysis
-
-try:
-    import matplotlib
-    matplotlib.use("TkAgg")
-    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-    HAS_MATPLOTLIB_TK = True
-except Exception:
-    HAS_MATPLOTLIB_TK = False
-
+from PIL import Image, ImageTk
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.data_loader import DataLoader
 from src.analyzer import ArrivalAnalyzer
 from src.plotter import plot_hourly, plot_daily
 from src.report import generate_summary
-
 
 # Styling constants
 BG = "#1f2326"
@@ -407,11 +394,7 @@ class PatientArrivalApp(tk.Tk):
             png = self.out_dir / "daily.png"
 
         if png.exists():
-            # Try embedding using matplotlib canvas if available and image file can be read
-            if HAS_MATPLOTLIB_TK:
                 try:
-                    # Use a simple image display with Tk PhotoImage
-                    from PIL import Image, ImageTk
                     img = Image.open(png)
                     img = img.resize((760, 420), Image.LANCZOS)
                     photo = ImageTk.PhotoImage(img)
@@ -420,25 +403,10 @@ class PatientArrivalApp(tk.Tk):
                     lbl.pack(expand=True)
                     return
                 except Exception:
-                    # fallback to matplotlib canvas showing image
-                    try:
-                        import matplotlib.image as mpimg
-                        fig = mpimg.imread(str(png))
-                        import matplotlib.pyplot as plt
-                        figobj, ax = plt.subplots(figsize=(8,4.5))
-                        ax.imshow(fig)
-                        ax.axis('off')
-                        canvas = FigureCanvasTkAgg(figobj, master=self.plot_area)
-                        canvas.draw()
-                        canvas.get_tk_widget().pack(expand=True, fill="both")
-                        return
-                    except Exception:
-                        pass
-
-            # final fallback: use simple label text
-            lbl = tk.Label(self.plot_area, text=f"Le fichier {png.name} existe mais n'a pas pu être affiché.\nOuvre-le dans le dossier de sortie.",
-                           bg=BG, fg=SUB_TEXT, font=FONT_NORMAL, justify="center")
-            lbl.pack(expand=True)
+                    # final fallback: use simple label text
+                    lbl = tk.Label(self.plot_area, text=f"Le fichier {png.name} existe mais n'a pas pu être affiché.\nOuvre-le dans le dossier de sortie.",
+                                bg=BG, fg=SUB_TEXT, font=FONT_NORMAL, justify="center")
+                    lbl.pack(expand=True)
         else:
             lbl = tk.Label(self.plot_area, text="Aucun graphique généré. Lancez l'analyse d'abord.",
                            bg=BG, fg=SUB_TEXT, font=FONT_NORMAL)
