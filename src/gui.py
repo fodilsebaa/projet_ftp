@@ -403,7 +403,7 @@ class PatientArrivalApp(tk.Tk):
                     lbl.pack(expand=True)
                     return
                 except Exception:
-                    # final fallback: use simple label text
+                    # afficher message d'erreur en cas de problème
                     lbl = tk.Label(self.plot_area, text=f"Le fichier {png.name} existe mais n'a pas pu être affiché.\nOuvre-le dans le dossier de sortie.",
                                 bg=BG, fg=SUB_TEXT, font=FONT_NORMAL, justify="center")
                     lbl.pack(expand=True)
@@ -412,9 +412,7 @@ class PatientArrivalApp(tk.Tk):
                            bg=BG, fg=SUB_TEXT, font=FONT_NORMAL)
             lbl.pack(expand=True)
 
-# ---------------------------
 # Run app
-# ---------------------------
 def main():
     app = PatientArrivalApp()
     app.mainloop()
