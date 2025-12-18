@@ -3,6 +3,9 @@ import pandas as pd
 from pathlib import Path
 
 def plot_hourly(hourly_df, out_path='docs/graphs/hourly.png'):
+    """
+    cree un graphique des arrivées horaires et l'enregistre sous forme de fichier PNG.
+    """
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     hourly_df = hourly_df.copy()
     hourly_df['timestamp'] = pd.to_datetime(hourly_df['timestamp'])
@@ -16,6 +19,9 @@ def plot_hourly(hourly_df, out_path='docs/graphs/hourly.png'):
     plt.close()
 
 def plot_daily(daily_df, out_path='docs/graphs/daily.png'):
+    """
+    cree un graphique des arrivées quotidiennes et l'enregistre sous forme de fichier PNG.
+    """
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     daily_df = daily_df.copy()
     daily_df['date'] = pd.to_datetime(daily_df['date'])

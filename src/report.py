@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 
 def generate_summary(out_json_path, total_patients, busiest_hour, busiest_hour_count, busiest_day, busiest_day_count, average_daily):
+    """
+    cree un résumé des analyses et l'enregistre sous forme de fichier JSON.
+    """
     summary = {
         "total_patients": total_patients,
         "busiest_hour": str(busiest_hour),

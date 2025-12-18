@@ -27,6 +27,9 @@ FONT_SUB = ("Segoe UI", 11)
 FONT_NORMAL = ("Segoe UI", 10)
 
 class PatientArrivalApp(tk.Tk):
+    """
+    Application graphique principale pour l'analyse des arrivées des patients.
+    """
     def __init__(self):
         super().__init__()
         self.title("Patient Arrival Counter")
@@ -297,7 +300,9 @@ class PatientArrivalApp(tk.Tk):
         self.status_var.set("Réinitialisé")
 
     def start_analysis_thread(self):
-        # Use a thread to keep UI responsive
+        """
+        Lancez l'analyse dans un thread séparé afin de préserver la réactivité de l'interface graphique.
+        """
         t = threading.Thread(target=self.run_analysis, daemon=True)
         t.start()
 

@@ -5,7 +5,13 @@ from datetime import datetime
 DB_PATH = Path("data/analysis_history.db")
 
 def init_db():
-    print(">>> init_db called")
+    """
+    Initialise la base de données SQLite.
+
+    Crée le fichier de base de données et la table d'analyse
+    s'ils n'existent pas déjà.
+    """
+    
     """Create database and table if they don't exist"""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
