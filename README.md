@@ -2,8 +2,8 @@
 Outil pour analyser les arrivées de patients.
 
 # Fonctionalité
-Ce projet est dévelopé a l'aide de tkinter ,permet d'analyser des fichiers csv contenant des les arrivée des patients
-et engendre des résultas ce forme graphiue,csv,JSON ,et garde l'historiue des analyses dans une bdd slite.
+Ce projet est dévelopé a l'aide de tkinter ,permet d'analyser des fichiers csv contenant les arrivée des patients
+et engendre des résultas ce forme graphiue,csv,JSON ,et garde l'historique des analyses dans une bdd sqlite.
 ## Usage
 ```bash
 python -m src.gui
